@@ -16,17 +16,38 @@ classdef GUIOperations
         % attribute given by str.
         function str_cell_array = XmlObj2StringCellArray(xmlObj,str)
             if(isempty(str))
-                str_cell_array = cell(1,xmlObj.getLength);
-                % Extract the identifies from the cable sets
-                for i =1:xmlObj.getLength
+                % Collect only element nodes (nodeType == 1) to avoid text nodes
+                elems = {};
+                for i = 1:xmlObj.getLength
                     tempXMLObj = xmlObj.item(i-1);
-                    str_cell_array{i} = char(tempXMLObj.getFirstChild.getData);
+                    if tempXMLObj.getNodeType == tempXMLObj.ELEMENT_NODE
+                        elems{end+1} = tempXMLObj; %#ok<AGROW>
+                    end
+                end
+                str_cell_array = cell(1,length(elems));
+                % Extract the identifies from the cable sets via first child data
+                for i =1:length(elems)
+                    tempXMLObj = elems{i};
+                    % Guard that firstChild exists
+                    if ~isempty(tempXMLObj.getFirstChild)
+                        str_cell_array{i} = char(tempXMLObj.getFirstChild.getData);
+                    else
+                        str_cell_array{i} = '';
+                    end
                 end
             else
-                str_cell_array = cell(1,xmlObj.getLength);
-                % Extract the identifies from the cable sets
-                for i =1:xmlObj.getLength
+                % Collect only element nodes (nodeType == 1) to avoid text nodes
+                elems = {};
+                for i = 1:xmlObj.getLength
                     tempXMLObj = xmlObj.item(i-1);
+                    if tempXMLObj.getNodeType == tempXMLObj.ELEMENT_NODE
+                        elems{end+1} = tempXMLObj; %#ok<AGROW>
+                    end
+                end
+                str_cell_array = cell(1,length(elems));
+                % Extract the identifies from the cable sets
+                for i =1:length(elems)
+                    tempXMLObj = elems{i};
                     str_cell_array{i} = char(tempXMLObj.getAttribute(str));
                 end
             end

@@ -9,9 +9,9 @@
 clc; clear; close all;
 
 % Set up the type of model, trajectory and the set of cables to be used
-model_config = ModelConfig('Example planar XY');
+model_config = ModelConfig('2 DoF VSD');
 cable_set_id = 'basic';
-trajectory_id = 'example_quintic';
+trajectory_id = 'x_simple';
 
 modelObj = model_config.getModel(cable_set_id);
 id_solver = IDSolverClosedForm(modelObj, ID_CF_SolverType.IMPROVED_CLOSED_FORM);
